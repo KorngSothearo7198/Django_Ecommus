@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        .total-row {
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+    </style>
+    {% include 'accounts/Header.html' %}
+</head>
+<body>
+
+    {% include 'accounts/MenuBegin.html' %}
+
+    {% include 'accounts/HeaderSectionBegin.html' %}
+
+    <h2>My Shopping Cart</h2>
+
+    {% if cart_items %}
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price (each)</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.product.price }}</td>
+                <td>${{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td colspan="3">Total</td>
+                <td>${{ total }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center;">Your cart is empty.</p>
+    {% endif %}
+
+
+    {% for item in order.items.all %}
+    <li>{{ item.quantity }} x {{ item.product.name }} = ${{ item.get_total_price }}</li>
+    {% endfor %}
+
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+
+
+</body>
+</html>

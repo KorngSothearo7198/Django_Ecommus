@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Product List</title>
+
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .product-card {
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      padding: 15px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-img {
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 1.2rem;
+      color: #28a745;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #dc3545;
+    }
+
+    .rating {
+      color: #ffc107;
+    }
+
+    .filter-section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .active-filter {
+      background-color: #4e73df;
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">🛍 Product List</h1>
+
+    <div class="filter-section mb-4">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="category-filter" class="form-label">Category:</label>
+          <select id="category-filter" class="form-select">
+            <option value="">All Categories</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="product-list"></div>
+  </div>
+
+  <!-- jQuery + Bootstrap Bundle -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      let allProducts = [];
+      let currentCategory = '';
+      let currentFilter = '';
+
+      loadProducts();
+
+      const categories = [
+        `{% for category in categories %}
+          { id: "{{ category.id }}", name: "{{ category.name }}" }{% if not forloop.last %}, {% endif %}
+    {% endfor %}`
+      ];
+
+      // category fillter
+    $('#category-filter').change(function () {
+      currentCategory = $(this).val();
+      currentFilter = '';
+      $('.filter-btn').removeClass('active-filter');
+      renderProducts();
+    });
+    function loadProducts() {
+      let url = '/api/products/';
+      if (currentCategory) {
+        url += '?category=' + currentCategory;
+      }
+      $.getJSON(url, function (data) {
+        allProducts = data;
+        renderProducts();
+      }).fail(function (jqxhr, textStatus, errorThrown) {
+        console.error("Request Failed:", {
+          status: jqxhr.status,
+          statusText: jqxhr.statusText,
+          responseText: jqxhr.responseText,
+          textStatus: textStatus,
+          errorThrown: errorThrown
+        });
+        $('#product-list').html('<div class="alert alert-danger">Failed to load products. See console for details.</div>');
+      });
+
+    }
+
+    function renderProducts() {
+      let filteredProducts = allProducts;
+
+      if (currentCategory) {
+        filteredProducts = filteredProducts.filter(p => p.category_id == currentCategory);
+      }
+      let html = '';
+      if (filteredProducts.length === 0) {
+        html = `<div class="col-12 text-center py-5">
+                    <h4>No products found matching your criteria</h4>
+                    <button class="btn btn-primary mt-3" onclick="resetFilters()">Reset Filters</button>
+                  </div>`;
+      } else {
+        filteredProducts.forEach(function (product) {
+          const categoryName = product.category_name || 'N/A';
+
+          let badges = '';
+          if (product.is_best_seller) badges += '<span class="badge bg-success me-1">Bestseller</span>';
+          if (product.is_new_arrival) badges += '<span class="badge bg-info me-1">New</span>';
+          if (product.is_hot_sale) badges += '<span class="badge bg-danger">Hot</span>';
+
+          html += `
+              <div class="col-md-3 mb-4">
+                <div class="product-card" onclick="window.location.href='/products/${product.id}/'" style="cursor:pointer;">
+                  <img src="${product.image}" class="img-fluid product-img" alt="${product.name}">
+                  <h5>${product.name}</h5>
+                  ${badges}
+                  <p class="price mt-2">💲${product.price} 
+                    ${product.old_price ? `<span class="old-price ms-2">$${product.old_price}</span>` : ''}
+                  </p>
+                  <p>Category: ${categoryName}</p>
+                  <p class="rating">⭐ ${product.rating}/5</p>
+                </div>
+              </div>`;
+        });
+      }
+
+      $('#product-list').html(html);
+    }
+
+    window.resetFilters = function () {
+      currentCategory = '';
+      currentFilter = '';
+      $('#category-filter').val('');
+      $('.filter-btn').removeClass('active-filter');
+      renderProducts();
+    }
+    });
+  </script>
+</body>
+
+</html>

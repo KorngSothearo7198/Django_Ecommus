@@ -1,0 +1,126 @@
+<!-- {% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thank You</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+
+        .thank-you-card {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .thank-you-icon {
+            font-size: 48px;
+            color: #28a745;
+        }
+
+        .thank-you-text {
+            margin-top: 20px;
+        }
+
+        .btn-home {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="thank-you-card">
+    <div class="thank-you-icon">🎉</div>
+    <h2 class="thank-you-text">Thank you!</h2>
+    
+    <p style="margin-top: 20px;">Name: <strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
+    <p>Email: <strong>{{ order.email }}</strong></p>
+    
+    <p>We’ve recorded your selected QR payment method.<br>Please scan the QR code and complete your payment.</p>
+    
+    <a href="{% url 'homepage' %}" class="btn btn-primary btn-home">Back to Home</a>
+</div>
+
+</body>
+</html> -->
+
+    <!-- <p>Order ID: <strong>#{{ order.id }}</strong></p> -->
+
+
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thank You</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+
+        .alert-card {
+            max-width: 500px;
+            margin: auto;
+            background: #d4edda; /* Bootstrap success alert color */
+            border: 1px solid #c3e6cb;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        .alert-icon {
+            font-size: 48px;
+            color: #155724; /* Bootstrap success text color */
+        }
+
+        .alert-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #155724;
+            margin-top: 15px;
+        }
+
+        .alert-text {
+            margin-top: 15px;
+            color: #155724;
+        }
+
+        .btn-home {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="alert-card">
+    <div class="alert-icon">✅</div>
+    <div class="alert-title">Thank You!</div>
+
+    <div class="alert-text">
+        <p>Name: <strong>{{ order.first_name }} {{ order.last_name }}</strong></p>
+        <p>Email: <strong>{{ order.email }}</strong></p>
+        <p>We’ve recorded your selected QR payment method.<br>
+           Please scan the QR code and complete your payment.</p>
+    </div>
+
+    <!-- <a href="{% url 'homepage' %}" class="btn btn-success btn-home">Back to Home</a> -->
+    <a href="/" class="btn btn-success btn-home">Back to Home</a>
+</div>
+
+</body>
+</html>
+

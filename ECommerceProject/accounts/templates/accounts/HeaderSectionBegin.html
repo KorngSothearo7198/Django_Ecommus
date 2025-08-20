@@ -1,0 +1,82 @@
+{% load static %}
+
+<header class="header">
+    <div class="header__top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-7">
+                    <div class="header__top__left">
+                        <p>Free shipping, 30-day return or refund guarantee.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-5 d-flex justify-content-end">
+                    <div class="header__top__right d-flex align-items-center gap-4">
+                        <div class="offcanvas__links d-flex gap-3" id="userLinks" style="display: none; gap: 10px; margin-right: 20px; color: white;">
+                            <!-- <a style="color: white;" href="{% url 'register_page_template' %}">Sign in</a> -->
+                             <a style="color: white;" href="/register/">Sign in</a>
+
+                            <a style="color: white;" href="#">FAQs</a>
+                        </div>
+                        <div class="header__top__hover">
+                            <span>USD <i class="arrow_carrot-down"></i></span>
+                            <ul>
+                                <li>USD</li>
+                                <li>EUR</li>
+                                <li>USD</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="header__logo">
+
+                    {% for logo in logos %}
+                    <a href="/">
+                        <img src="{{ logo.logo.url }}" alt="Logo"
+                            style="width: 200px; height: auto; background-color: black; padding:10px;">
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <nav class="header__menu mobile-menu">
+                    <ul>
+                        <li class="active" style="font-style: bold;"><a href="/">Home</a></li>
+                        <li><a href="{% url 'shoppage' %}">Shop</a></li>
+                        <li><a href="#">Pages</a>
+                            <ul class="dropdown">
+                                <li><a href="{% url 'aboutpage' %}">About Us</a></li>
+                                {# <li><a href="{% url 'shopping_cartpage' %}">Shopping Cart</a></li> #}
+                                <li><a href="{% url 'checkoutpage' %}">Check Out</a></li>
+                                {# <li><a href="{% url 'blogdetailspage' %}">Blog Details</a></li> #}
+
+                                {% for blog in blogs %}
+                                <li><a href="{% url 'blogdetailspage' blog.slug %}">comment</a></li>
+                                {% endfor %}
+
+
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'blogpage' %}">Blog</a></li>
+                        <li><a href="{% url 'contactpage' %}">Contacts</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="header__nav__option">
+                    <a href="#" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt=""></a>
+                    <a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a>
+                    <a href="#"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span>0</span></a>
+                    <div class="price">$0.00</div>
+                </div>
+            </div>
+        </div>
+        <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+</header>

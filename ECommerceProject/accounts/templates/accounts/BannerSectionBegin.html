@@ -1,0 +1,21 @@
+{% load static %}
+
+<section class="banner spad">
+    <div class="container">
+        <div class="row">
+            {% for banner in banners %}
+            <div class="col-lg-{{ banner.get_col_width }}">
+                <div class="banner__item {{ banner.position_class }}">
+                    <div class="banner__item__pic">
+                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}" style="margin-left: 50px;">
+                    </div>
+                    <div class="banner__item__text">
+                        <h2>{{ banner.title }}</h2>
+                        <a href="{{ banner.link }}">Shop now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

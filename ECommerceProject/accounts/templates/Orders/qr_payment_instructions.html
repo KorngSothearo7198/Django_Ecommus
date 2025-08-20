@@ -1,0 +1,184 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    {% include 'accounts/Header.html' %}
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 60px;
+        }
+
+        .qr-card {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-img {
+            width: 200px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 5px;
+            margin: 10px 0;
+        }
+
+        .form-select {
+            margin-top: 15px;
+        }
+
+        .btn-primary {
+            margin-top: 25px;
+            width: 100%;
+        }
+
+        .qr-description {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+    {% include 'accounts/MenuBegin.html' %}
+
+    {% include 'accounts/HeaderSectionBegin.html' %}
+
+    <!-- {% include 'accounts/HeroSectionBegin.html' %} -->
+
+
+
+
+
+    <div class="container">
+        <div class="qr-card">
+            <h3 class="text-center mb-4">📱 QR Code Payment</h3>
+            <!-- <p><strong>Order ID:</strong> #{{ order.id }}</p>
+            <p><strong>Total Amount:</strong> ${{ order.total }}</p> -->
+
+            <h5 class="mb-3">Order Summary:</h5>
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Qty</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>${{ item.get_total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">Total:</th>
+                        <th>${{ order.total }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+
+            <form method="post" action="{% url 'submit_qr_payment' order.id %}">
+                {% csrf_token %}
+
+                <!-- <label for="qr_select" class="form-label mt-3">Select a QR Payment:</label> -->
+                <select class="form-select" name="qr_method_id" id="qr_select" onchange="showQR(this.value)" required>
+                    <option value="" selected disabled>Choose Payment Method</option>
+                    {% for qr in qr_methods %}
+                    <option value="{{ qr.id }}">{{ qr.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <div id="qr-display" class="text-center" style="display: none;">
+                    <h5 class="mt-4">Scan this QR Code</h5>
+                    <img id="qr-image" src="" alt="QR Code" class="qr-img">
+                    <p id="qr-description" class="qr-description"></p>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Confirm Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const qrData = {
+        {% for qr in qr_methods %}
+        "{{ qr.id }}": {
+            "image": "{{ qr.qr_image.url }}",
+                "description": "{{ qr.description|default:''|escapejs }}"
+        } {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    };
+
+        function showQR(id) {
+            const display = document.getElementById("qr-display");
+            const img = document.getElementById("qr-image");
+            const desc = document.getElementById("qr-description");
+
+            if (qrData[id]) {
+                display.style.display = "block";
+                img.src = qrData[id].image;
+                desc.textContent = qrData[id].description;
+            } else {
+                display.style.display = "none";
+                img.src = "";
+                desc.textContent = "";
+            }
+        }
+    </script>
+
+
+
+    {% include 'accounts/FooterSectionBegin.html' %}
+    {% include 'accounts/SearchBegin.html' %}
+    <!-- Search End -->
+
+    <!-- Js Plugins -->
+    {% include 'accounts/JsPlugins.html' %}
+
+</body>
+
+</html>
+
+
+<!-- <h3>QR Code Payment Instructions</h3>
+<p>Order ID: {{ order.id }}</p>
+<p>Total Amount: ${{ order.total }}</p>
+<p>Please select one of the following QR codes to make your payment:</p>
+
+<div class="qr-options">
+    {% for qr in qr_methods %}
+    <div class="qr-option">
+        <p><strong>{{ qr.name }}</strong></p>
+        <img src="{{ qr.qr_image.url }}" alt="{{ qr.name }}">
+        {% if qr.description %}
+        <p style="font-size: small;">{{ qr.description }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<p>After payment, please send proof of payment (screenshot or reference ID) to our support team via Telegram or Email.</p>
+
+<a href="{% url 'homepage' %}" class="btn btn-primary mt-3">Back to Home</a> -->

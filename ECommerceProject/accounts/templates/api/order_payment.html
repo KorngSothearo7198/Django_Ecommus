@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Payment</title>
+</head>
+<body>
+    <h2>Order information</h2>
+    <p><strong>CustomerName :</strong> {{ order.first_name }} {{ order.last_name }}</p>
+    <p><strong>PhoneNumber :</strong> {{ order.phone }}</p>
+    <p><strong>Email :</strong> {{ order.email }}</p>
+    <p><strong>Address :</strong> {{ order.address|safe }}</p>
+    <p><strong>Payment method:</strong> {{ order.payment_method }}</p>
+    <p><strong>Amount :</strong> ${{ order.total }}</p>
+
+    {% if order.qr_method %}
+        <h3>Scan QR to pay</h3>
+        <p><strong>Pay by :</strong> {{ order.qr_method.name }}</p>
+        <img src="{{ order.qr_method.qr_image.url }}" alt="QR Code" width="250">
+        <!-- <div>{{ order.qr_method.description|safe }}</div> -->
+    {% else %}
+        <!-- <p>មិនមាន QR Code សម្រាប់ការកម្មង់នេះទេ។</p> -->
+    {% endif %}
+</body>
+</html>

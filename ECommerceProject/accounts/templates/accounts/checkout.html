@@ -1,0 +1,433 @@
+{% load math_filters %} {# if you're using mul filter #}
+
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Male_Fashion Template">
+    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Male-Fashion | CheckOut</title>
+
+
+    <style>
+        /* Main Checkout Styles */
+        .checkout__title,
+        .summary__title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4b8df8;
+            box-shadow: 0 0 0 0.2rem rgba(75, 141, 248, 0.25);
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .payment-option {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-option:last-child {
+            border-bottom: none;
+        }
+
+        .payment-option input[type="radio"] {
+            display: none;
+        }
+
+        .payment-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        .payment-option label i {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #555;
+        }
+
+        .payment-option label span {
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .payment-option label small {
+            color: #777;
+            font-size: 12px;
+        }
+
+        .payment-option input[type="radio"]:checked+label {
+            background-color: #f8f9fa;
+        }
+
+        .payment-option input[type="radio"]:checked+label i {
+            color: #4b8df8;
+        }
+
+        /* Order Summary */
+        .order__summary {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            height: 100%;
+        }
+
+        .order__items {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .order__item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item__image img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .item__details {
+            flex: 1;
+        }
+
+        .item__details h6 {
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .item__details p {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+
+        .item__price {
+            font-weight: 600;
+        }
+
+        .order__totals {
+            margin: 25px 0;
+        }
+
+        .total__row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .grand-total {
+            font-size: 18px;
+            font-weight: 600;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .order__support {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .order__support i {
+            color: #4b8df8;
+            margin-right: 8px;
+        }
+
+        .empty__cart {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .empty__cart i {
+            font-size: 50px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .order__summary {
+                margin-top: 30px;
+            }
+        }
+    </style>
+
+    <script>
+        // Form validation
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+
+    <!-- Google Font -->
+    {% include 'accounts/Header.html' %}
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    {% include 'accounts/MenuBegin.html' %}
+    <!-- Offcanvas Menu End -->
+
+    <!-- Header Section Begin -->
+    {% include 'accounts/HeaderSectionBegin.html' %}
+    <!-- Header Section End -->
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__text">
+                        <h4>Check Out</h4>
+                        <div class="breadcrumb__links">
+                            <a href="{% url 'homepage' %}">Home</a>
+                            <a href="{% url 'shoppage' %}">Shop</a>
+                            <span>Check Out</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="checkout spad">
+        <div class="container">
+            <div class="row">
+                <!-- Billing Information Column -->
+                <div class="col-lg-7">
+                    <div class="checkout__form">
+                        <h4 class="checkout__title">Billing Information</h4>
+
+                        <form method="post" action="{% url 'place_order' %}" class="needs-validation" novalidate>
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name"
+                                            placeholder="John" required>
+                                        <div class="invalid-feedback">
+                                            Please enter your first name.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-group">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name"
+                                            placeholder="Doe" required>
+                                        <div class="invalid-feedback">
+                                            Please enter your last name.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="email">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="john@example.com" required>
+                                <div class="invalid-feedback">
+                                    Please enter a valid email address.
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone"
+                                    placeholder="+855 12 345 678" required>
+                                <div class="invalid-feedback">
+                                    Please enter your phone number.
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label for="address">Shipping Address</label>
+                                <textarea class="form-control" id="address" name="address" rows="3"
+                                    placeholder="Street, City, Province" required></textarea>
+                                <div class="invalid-feedback">
+                                    Please enter your shipping address.
+                                </div>
+                            </div>
+                            <h5 class="mb-3">Payment Method</h5>
+                            <div class="payment-methods mb-5">
+                                <div class="payment-option">
+                                    <input type="radio" id="paypal" name="payment_method" value="paypal" required>
+                                    <label for="paypal">
+                                        <i class="fab fa-paypal"></i>
+                                        <span>PayPal</span>
+                                        <small>Pay securely with your PayPal account</small>
+                                    </label>
+                                </div>
+
+                                <div class="payment-option">
+                                    <input type="radio" id="cod" name="payment_method" value="cod">
+                                    <label for="cod">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>Cash on Delivery</span>
+                                        <small>Pay when you receive your order</small>
+                                    </label>
+                                </div>
+
+                                <!-- QR Code Payment Option -->
+                                <div class="payment-option">
+                                    <input type="radio" id="qrpay" name="payment_method" value="qrpay">
+                                    <label for="qrpay">
+                                        <i class="fas fa-qrcode"></i>
+                                        <span>Pay by QR Code</span>
+                                        <small>Scan with your mobile banking app</small>
+                                        <div class="mt-2">
+                                            <img src="{% static 'images/qr_code.png' %}" alt="QR Code"
+                                                style="width:150px;">
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                Place Order
+                            </button>
+
+                            
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Order Summary Column -->
+                <div class="col-lg-5">
+                    <div class="order__summary">
+                        <h4 class="summary__title">Order Summary</h4>
+
+                        {% if cart_items %}
+                        <div class="order__items">
+                            {% for item in cart_items %}
+                            <div class="order__item">
+                                <div class="item__image">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                </div>
+                                <div class="item__details">
+                                    <h6>{{ item.product.name }}</h6>
+                                    <p>{{ item.quantity }} × ${{ item.product.price }}</p>
+                                </div>
+                                <div class="item__price">
+                                    ${{ item.total_price }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="order__totals">
+                            <div class="total__row">
+                                <span>Subtotal</span>
+                                <span>${{ total }}</span>
+                            </div>
+                            <div class="total__row">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
+                            <div class="total__row grand-total">
+                                <span>Total</span>
+                                <span>${{ total }}</span>
+                            </div>
+                        </div>
+
+                        <div class="order__support">
+                            <p><i class="fas fa-phone"></i> Need help? Call us: +855 12 345 678</p>
+                        </div>
+                        {% else %}
+                        <div class="empty__cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Your cart is empty</p>
+                            <a href="{% url 'shoppage' %}" class="btn btn-outline-primary">Continue Shopping</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+    <!-- </div>
+    </div> -->
+    </section>
+
+    <!-- Checkout Section End -->
+
+    <!-- Footer Section Begin -->
+    {% include 'accounts/FooterSectionBegin.html' %}
+    <!-- Footer Section End -->
+
+    <!-- Search Begin -->
+    {% include 'accounts/SearchBegin.html' %}
+    <!-- Search End -->
+
+    <!-- Js Plugins -->
+    {% include 'accounts/JsPlugins.html' %}
+</body>
+
+</html>
